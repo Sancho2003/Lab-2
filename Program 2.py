@@ -2,8 +2,8 @@ import re
 import csv
 
 genre = input('Какой жанр игр Вас интересует?\n').capitalize().lstrip().split(',')
-category = input('Какая категория игр Вас интересует?\n').swapcase().lstrip().split(',')
-developer = input('Игры какого разработчика Вас интересуют?\n').swapcase().lstrip().split(',')
+category = input('Какая категория игр Вас интересует?\n').title().lstrip().split(',')
+developer = input('Игры какого разработчика Вас интересуют?\n').title().lstrip().split(',')
 platform = input('На какой платформе вы собираетесь играть?\n').lower().lstrip().split(',')
 
 year = (input('Какой год выхода Вас интересует? (Можно ввести промежуток)\n'))
