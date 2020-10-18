@@ -28,26 +28,57 @@ if ratings == 'да':
 else:
     good = False
 
-with open('steam.csv', encoding='utf-8') as f, \
-        open('result.txt', 'w', encoding='utf-8') as f1:
-    reader = csv.reader(f)
-    for line in reader:
-        if line[0] == 'appid':
-            continue
+    with open('steam.csv', encoding='utf-8') as f, \
+            open('result.txt', 'w', encoding='utf-8') as f1:
+        reader = csv.reader(f)
+        for line in reader:
+            if line[0] == 'appid':
+                continue
 
-        if period:
-            if year[0] <= line[2].split('-')[0] <= year[1]:
-                date = True
-            else:
-                date = False
-        else:
-            date = (line[2].split('-')[0] == year) | (year == '')
 
-        if ((any(genre in line[9].split(';') and line[10].split(';') for genre in genre) | (genre == [''])) and
-                date and
-                (any(category in line[8].split(';') for category in category) | (category == [''])) and
-                (any(developer in line[4].split(';') for developer in developer) | (developer == [''])) and
-                (any(platform in line[6].split(';') for platform in platform) | (platform == [''])) and
-                (cost[0] <= float(line[17]) <= cost[1]) and
-                (((good is True) & (int(line[12]) > int(line[13]))) | (ratings == ''))):
-            f1.write(line[1] + '\n')
+            def genre_checking():
+                global genre
+                return any(genre in line[9].split(';') and line[10].split(';') for genre in genre) | (genre == [''])
+
+
+            def category_checking():
+                global category
+                return any(category in line[8].split(';') for category in category) | (category == [''])
+
+
+            def developer_checking():
+                global developer
+                return any(developer in line[4].split(';') for developer in developer) | (developer == [''])
+
+
+            def platform_checking():
+                global platform
+                return any(platform in line[6].split(';') for platform in platform) | (platform == [''])
+
+
+            def year_checking():
+                if period:
+                    if year[0] <= line[2].split('-')[0] <= year[1]:
+                        return True
+                    else:
+                        return False
+                else:
+                    return (line[2].split('-')[0] == year) | (year == '')
+
+
+            def cost_checking():
+                return cost[0] <= float(line[17]) <= cost[1]
+
+
+            def ratings_checking():
+                return ((good is True) & (int(line[12]) > int(line[13]))) | (ratings == '')
+
+
+            if (genre_checking() and
+                    category_checking() and
+                    developer_checking() and
+                    platform_checking() and
+                    year_checking() and
+                    cost_checking() and
+                    ratings_checking()):
+                f1.write(line[1] + '\n')
